@@ -84,17 +84,25 @@ for epoch in range(num_epochs):
         if (i+1) % 100 == 0:
             print(f'epoch {epoch+1}/{num_epochs}, step = {i+1}/{n_total_steps}, loss = {loss.item():.3f}')
 
-def test():
+def test(model, test_loader, device):
 
-# Izračun deleža pravilno razvrščenih testnih vzorev
+    model.eval()  
     pravilni = 0
-    for i in range(len(test_dataset)):
-        if test_dataset.label[i] == NeuralNet(test_dataset).label[i]:
-            pravilni += 1
-        
-    natancnost = pravilni / len(test_dataset)
-    print(natancnost)
-    return 0
+    vsi = 0
 
-test(model)
+   # with torch.no_grad():  # Izključi izračun gradientov za hitrejše izvajanje
+    for images, labels in test_loader:
+        images = images.reshape(-1, 28*28).to(device)
+        labels = labels.to(device)
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        vsi += labels.size(0)
+        pravilni += (predicted == labels).sum().item()
+    
+    acc = 100 * pravilni / vsi
+    return acc
+
+
+natančnost = test(model, test_loader, device)
+print(f'Natančnost: {natančnost:.2f} %')
         
