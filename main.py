@@ -7,10 +7,11 @@ import matplotlib.pyplot as plt
 
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=None)
 
-for i in range(6):
+'''for i in range(6):
     plt.subplot(2,3,i+1)
     plt.imshow(mnist_trainset[i][0], cmap= 'gray')
 plt.show()
+'''
 
 
 # Device configuration
